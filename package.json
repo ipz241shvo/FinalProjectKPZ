@@ -1,0 +1,17 @@
+{
+  "name": "qr-generator",
+  "version": "1.0.0",
+  "description": "QR Generator with auth and history",
+  "main": "server/app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "node --watch server/app.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "express-session": "^1.18.1",
+    "sqlite3": "^5.1.7"
+  }
+}
