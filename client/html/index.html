@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Generator</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <script>
+    document.documentElement.setAttribute("data-theme", localStorage.getItem("qr_theme") || "light");
+  </script>
+</head>
+<body>
+  <div class="page-bg"></div>
+
+  <main class="layout">
+    <header class="topbar">
+      <a href="/" class="logo">
+        <span class="logo-mark">Q</span>
+        <span class="logo-text">
+          <strong>QR Studio</strong>
+          <small>Smart QR Builder</small>
+        </span>
+      </a>
+
+      <div class="topbar-actions">
+        <button id="theme-toggle" class="btn btn-secondary" type="button">Змінити тему</button>
+        <a href="/login.html" class="btn btn-secondary" id="login-link">Увійти</a>
+        <a href="/register.html" class="btn btn-primary" id="register-link">Реєстрація</a>
+        <button id="logout-btn" class="btn btn-secondary hidden" type="button">Вийти</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="hero-copy">
+        <span class="eyebrow">QR code generator</span>
+        <h1>Створюй QR-коди швидко, чисто і професійно</h1>
+        <p class="hero-text">
+          Генеруй QR для посилань, Wi-Fi, email, телефону, тексту, контактів, SMS, геолокації, подій та соцмереж. Налаштовуй стиль, завантажуй PNG та зберігай історію в акаунті.
+        </p>
+
+        <div class="hero-tags">
+          <span>URL</span>
+          <span>Wi-Fi</span>
+          <span>Email</span>
+          <span>Phone</span>
+          <span>Text</span>
+          <span>vCard</span>
+          <span>SMS</span>
+          <span>Geo</span>
+          <span>Event</span>
+          <span>Social</span>
+        </div>
+
+        <p id="user-info" class="user-info"></p>
+        <p id="auth-warning" class="auth-warning">
+          Щоб зберігати QR-коди в історію, потрібно авторизуватися.
+        </p>
+      </div>
+
+      <div class="hero-card">
+        <div class="hero-card-head">
+          <span class="hero-card-label">Preview</span>
+          <span class="hero-card-status">Ready</span>
+        </div>
+
+        <div class="preview-area">
+          <div id="qr-wrapper" class="qr-wrapper hidden">
+            <canvas id="qr-canvas"></canvas>
+          </div>
+
+          <div id="preview-placeholder" class="preview-placeholder">
+            <div class="preview-mock">
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+              <div class="mock-cell"></div>
+            </div>
+            <p>Тут буде відображено QR-код</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-grid">
+      <section class="panel main-panel">
+        <div class="panel-head">
+          <div>
+            <span class="eyebrow">Builder</span>
+            <h2>Налаштування QR</h2>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="qr-type">Тип QR</label>
+          <select id="qr-type">
+            <option value="url">Посилання</option>
+            <option value="wifi">Wi-Fi</option>
+            <option value="email">Email</option>
+            <option value="phone">Телефон</option>
+            <option value="text">Текст</option>
+            <option value="vcard">vCard (Контакт)</option>
+            <option value="sms">SMS</option>
+            <option value="geo">Геолокація</option>
+            <option value="vevent">Подія в календарі</option>
+            <option value="social">Соціальні мережі</option>
+          </select>
+        </div>
+
+        <!-- Панель: URL -->
+        <div id="panel-url" class="qr-type-panel active">
+          <div class="form-group">
+            <label for="qr-input">Посилання</label>
+            <input id="qr-input" type="text" placeholder="https://example.com" />
+          </div>
+        </div>
+
+        <!-- Панель: WiFi -->
+        <div id="panel-wifi" class="qr-type-panel hidden">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="wifi-ssid">Назва мережі (SSID)</label>
+              <input id="wifi-ssid" type="text" placeholder="Home WiFi" />
+            </div>
+
+            <div class="form-group">
+              <label for="wifi-password">Пароль</label>
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input id="wifi-password" type="password" placeholder="Введи пароль" style="flex:1;" />
+                <button type="button" id="wifi-show-password-btn" class="btn btn-secondary" style="white-space:nowrap;">Показати</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="wifi-security">Тип захисту</label>
+              <select id="wifi-security">
+                <option value="WPA">WPA/WPA2</option>
+                <option value="WEP">WEP</option>
+                <option value="nopass">Без пароля</option>
+              </select>
+            </div>
+
+            <div class="form-group checkbox-wrap">
+              <label class="checkbox-label">
+                <input id="wifi-hidden" type="checkbox" />
+                <span>Прихована мережа</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель: Email -->
+        <div id="panel-email" class="qr-type-panel hidden">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="email-address">Email</label>
+              <input id="email-address" type="email" placeholder="name@example.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="email-cc">CC (копія)</label>
+              <input id="email-cc" type="email" placeholder="copy@example.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="email-subject">Тема</label>
+              <input id="email-subject" type="text" placeholder="Тема листа" />
+            </div>
+
+            <div class="form-group full">
+              <label for="email-body">Текст листа</label>
+              <textarea id="email-body" rows="4" placeholder="Введи текст листа"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель: Телефон -->
+        <div id="panel-phone" class="qr-type-panel hidden">
+          <div class="form-group">
+            <label for="phone-number">Номер телефону</label>
+            <input id="phone-number" type="text" placeholder="+380..." />
+          </div>
+        </div>
+
+        <!-- Панель: Текст -->
+        <div id="panel-text" class="qr-type-panel hidden">
+          <div class="form-group">
+            <label for="text-content">Текст</label>
+            <textarea id="text-content" rows="5" placeholder="Введи будь-який текст"></textarea>
+          </div>
+        </div>
+
+        <!-- Панель: vCard -->
+        <div id="panel-vcard" class="qr-type-panel hidden">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="vcard-first-name">Ім'я</label>
+              <input type="text" id="vcard-first-name" placeholder="Іван" />
+            </div>
+            <div class="form-group">
+              <label for="vcard-last-name">Прізвище</label>
+              <input type="text" id="vcard-last-name" placeholder="Петренко" />
+            </div>
+            <div class="form-group">
+              <label for="vcard-title-job">Посада</label>
+              <input type="text" id="vcard-title-job" placeholder="Розробник" />
+            </div>
+            <div class="form-group">
+              <label for="vcard-company">Компанія</label>
+              <input type="text" id="vcard-company" placeholder="Назва компанії" />
+            </div>
+            <div class="form-group">
+              <label for="vcard-phone">Телефон</label>
+              <input type="tel" id="vcard-phone" placeholder="+380501234567" />
+            </div>
+            <div class="form-group">
+              <label for="vcard-email">Email</label>
+              <input type="email" id="vcard-email" placeholder="ivan@example.com" />
+            </div>
+            <div class="form-group full">
+              <label for="vcard-website">Сайт</label>
+              <input type="url" id="vcard-website" placeholder="https://example.com" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель: SMS -->
+        <div id="panel-sms" class="qr-type-panel hidden">
+          <div class="form-group">
+            <label for="sms-phone">Номер телефону</label>
+            <input type="tel" id="sms-phone" placeholder="+380501234567" />
+          </div>
+          <div class="form-group">
+            <label for="sms-message">Текст повідомлення</label>
+            <textarea id="sms-message" rows="3" placeholder="Текст SMS..."></textarea>
+          </div>
+        </div>
+
+        <!-- Панель: Геолокація -->
+        <div id="panel-geo" class="qr-type-panel hidden">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="geo-lat">Широта</label>
+              <input type="number" id="geo-lat" step="0.000001" min="-90" max="90" placeholder="50.450001" />
+            </div>
+            <div class="form-group">
+              <label for="geo-lng">Довгота</label>
+              <input type="number" id="geo-lng" step="0.000001" min="-180" max="180" placeholder="30.523400" />
+            </div>
+            <div class="form-group full">
+              <label for="geo-label">Підпис місця (необов'язково)</label>
+              <input type="text" id="geo-label" placeholder="Наприклад: Офіс" />
+            </div>
+          </div>
+          <button type="button" id="geo-locate-btn" class="btn btn-secondary">📍 Моя локація</button>
+        </div>
+
+        <!-- Панель: Подія в календарі -->
+        <div id="panel-vevent" class="qr-type-panel hidden">
+          <div class="grid-2">
+            <div class="form-group full">
+              <label for="event-name">Назва події *</label>
+              <input type="text" id="event-name" placeholder="День народження" />
+            </div>
+            <div class="form-group">
+              <label for="event-start">Початок</label>
+              <input type="datetime-local" id="event-start" />
+            </div>
+            <div class="form-group">
+              <label for="event-end">Кінець</label>
+              <input type="datetime-local" id="event-end" />
+            </div>
+            <div class="form-group full">
+              <label for="event-location">Місце</label>
+              <input type="text" id="event-location" placeholder="Київ, вул. Хрещатик 1" />
+            </div>
+            <div class="form-group full">
+              <label for="event-desc">Опис</label>
+              <textarea id="event-desc" rows="3" placeholder="Додаткова інформація..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- Панель: Соціальні мережі -->
+        <div id="panel-social" class="qr-type-panel hidden">
+          <div class="form-group">
+            <label for="social-network">Платформа</label>
+            <select id="social-network">
+              <option value="telegram">Telegram</option>
+              <option value="instagram">Instagram</option>
+              <option value="linkedin">LinkedIn</option>
+              <option value="github">GitHub</option>
+              <option value="tiktok">TikTok</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="social-username">Нікнейм / Username</label>
+            <input type="text" id="social-username" placeholder="@username" />
+          </div>
+          <div class="form-group">
+            <label>Посилання:</label>
+            <a id="social-preview-link" href="#" target="_blank" rel="noopener noreferrer">—</a>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="qr-title">Назва QR (необов'язково)</label>
+          <input id="qr-title" type="text" placeholder="Наприклад: WiFi для гостей" />
+        </div>
+
+        <div class="subpanel">
+          <div class="subpanel-head">
+            <h3>Стиль</h3>
+            <p>Налаштування зовнішнього вигляду</p>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="dark-color">Колір QR</label>
+              <input id="dark-color" type="color" value="#111111" />
+            </div>
+
+            <div class="form-group">
+              <label for="light-color">Колір фону</label>
+              <input id="light-color" type="color" value="#ffffff" />
+            </div>
+
+            <div class="form-group">
+              <label for="qr-size">Розмір</label>
+              <input id="qr-size" type="range" min="180" max="500" step="10" value="260" />
+              <span id="qr-size-value" class="range-value">260 px</span>
+            </div>
+
+            <div class="form-group">
+              <label for="qr-margin">Відступ</label>
+              <input id="qr-margin" type="range" min="0" max="8" step="1" value="2" />
+              <span id="qr-margin-value" class="range-value">2</span>
+            </div>
+
+            <div class="form-group full">
+              <label for="logo-input">Логотип у центрі</label>
+              <input id="logo-input" type="file" accept="image/*" />
+              <p class="hint">PNG/JPG. Логотип не зберігається в історію.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button id="save-btn" type="button" class="btn btn-primary">Зберегти в історію</button>
+          <button id="download-btn" type="button" class="btn btn-secondary">Скачати PNG</button>
+          <button id="reset-style-btn" type="button" class="btn btn-secondary">Скинути стиль</button>
+          <button id="clear-btn" type="button" class="btn btn-secondary">Очистити</button>
+        </div>
+
+        <p id="error-message" class="error-message"></p>
+      </section>
+
+      <aside class="sidebar">
+        <div class="panel side-card">
+          <span class="eyebrow">Features</span>
+          <h3>Що є в сервісі</h3>
+
+          <div class="info-list">
+            <div class="info-item">
+              <strong>10 типів QR</strong>
+              <p>URL, Wi-Fi, Email, Телефон, Текст, vCard, SMS, Геолокація, Подія, Соцмережі.</p>
+            </div>
+
+            <div class="info-item">
+              <strong>Кастомний стиль</strong>
+              <p>Колір, фон, розмір, відступ і логотип по центру.</p>
+            </div>
+
+            <div class="info-item">
+              <strong>Історія кодів</strong>
+              <p>Повернись до будь-якого збереженого QR у кілька кліків.</p>
+            </div>
+
+            <div class="info-item">
+              <strong>Швидкий експорт</strong>
+              <p>Одразу завантажуй готовий результат у форматі PNG.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel side-note">
+          <span class="eyebrow">Tip</span>
+          <h3>Рекомендація</h3>
+          <p>
+            Для максимальної сканованості краще використовувати темний код на світлому фоні і не ставити занадто великий логотип.
+          </p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel history-panel">
+      <div class="panel-head">
+        <div>
+          <span class="eyebrow">History</span>
+          <h2>Збережені QR-коди</h2>
+        </div>
+
+        <button id="clear-history-btn" class="btn btn-secondary hidden" type="button">
+          Очистити всю історію
+        </button>
+      </div>
+
+      <div id="history-list" class="history-list">
+        <p class="empty-text">Увійди в акаунт, щоб бачити збережену історію.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+  <script type="module" src="/js/script.js"></script>
+  <script src="/js/theme.js"></script>
+
+  <script>
+    const qrWrapperEl = document.getElementById("qr-wrapper");
+    const previewPlaceholder = document.getElementById("preview-placeholder");
+
+    const observer = new MutationObserver(() => {
+      if (qrWrapperEl.classList.contains("hidden")) {
+        previewPlaceholder.style.display = "flex";
+      } else {
+        previewPlaceholder.style.display = "none";
+      }
+    });
+
+    observer.observe(qrWrapperEl, { attributes: true, attributeFilter: ["class"] });
+
+    if (qrWrapperEl.classList.contains("hidden")) {
+      previewPlaceholder.style.display = "flex";
+    } else {
+      previewPlaceholder.style.display = "none";
+    }
+  </script>
+</body>
+</html>
