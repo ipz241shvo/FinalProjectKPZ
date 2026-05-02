@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Вхід | QR Studio</title>
+  <link rel="stylesheet" href="/css/auth.css" />
+  <script>
+    document.documentElement.setAttribute("data-theme", localStorage.getItem("qr_theme") || "light");
+  </script>
+</head>
+<body>
+  <div class="auth-bg"></div>
+
+  <main class="auth-layout">
+    <section class="auth-side">
+      <a href="/" class="brand">
+        <span class="brand-mark">Q</span>
+        <span class="brand-text">
+          <strong>QR Studio</strong>
+          <small>Smart QR Builder</small>
+        </span>
+      </a>
+
+      <div class="auth-copy">
+        <span class="eyebrow">Welcome back</span>
+        <h1>Увійди в акаунт і працюй зі своєю історією QR</h1>
+        <p>
+          Повернись до збережених кодів, редагуй їх та швидко створюй нові QR для посилань, Wi-Fi, email, телефону або тексту.
+        </p>
+
+        <div class="feature-list">
+          <div class="feature-item">
+            <strong>Історія кодів</strong>
+            <span>Усі збережені QR в одному місці.</span>
+          </div>
+
+          <div class="feature-item">
+            <strong>Швидкий доступ</strong>
+            <span>Кілька кліків — і код знову готовий.</span>
+          </div>
+
+          <div class="feature-item">
+            <strong>Кастомний стиль</strong>
+            <span>Кольори, розмір, відступ і логотип.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="auth-card-wrap">
+      <div class="auth-card">
+        <div class="card-top">
+          <span class="eyebrow">Login</span>
+          <button id="theme-toggle" class="theme-btn" type="button">Змінити тему</button>
+        </div>
+
+        <div class="card-head">
+          <h2>Вхід</h2>
+          <p>Увійди, щоб зберігати та переглядати свою історію QR-кодів.</p>
+        </div>
+
+        <form id="login-form" class="auth-form">
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="name@example.com" required />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Пароль</label>
+            <input id="password" name="password" type="password" placeholder="Введи пароль" required />
+          </div>
+
+          <button type="submit" class="btn btn-primary">Увійти</button>
+          <p id="error-message" class="error-message"></p>
+        </form>
+
+        <div class="auth-footer">
+          <span>Ще немає акаунта?</span>
+          <a href="/register.html">Створити акаунт</a>
+        </div>
+
+        <div class="back-link-wrap">
+          <a href="/" class="back-link">← Повернутися на головну</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/js/login.js"></script>
+  <script src="/js/theme.js"></script>
+</body>
+</html>
