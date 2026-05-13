@@ -20,22 +20,13 @@ export class GeoQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const lat = formData.geoLat;
-    const lng = formData.geoLng;
+    const { geoLat, geoLng } = formData;
 
-    if (!lat && !lng) return "Введіть координати місця.";
-    if (!lat) return "Введіть широту.";
-    if (!lng) return "Введіть довготу.";
+    if (!geoLat && !geoLng) return "Введіть координати місця.";
 
-    const latNum = parseFloat(lat);
-    const lngNum = parseFloat(lng);
+    return this.require(formData, 'geoLat', "Введіть широту.") ||
+        this.require(formData, 'geoLng', "Введіть довготу.");
 
-    if (isNaN(latNum)) return "Широта має бути числом.";
-    if (isNaN(lngNum)) return "Довгота має бути числом.";
-    if (!isValidLatitude(lat)) return "Широта має бути від -90 до 90.";
-    if (!isValidLongitude(lng)) return "Довгота має бути від -180 до 180.";
-
-    return null;
   }
 
   parsePayload(rawPayload) {

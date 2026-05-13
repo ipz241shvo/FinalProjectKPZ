@@ -10,12 +10,13 @@ export class UrlQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const value = formData.url;
-    if (!value) return "Введи посилання.";
-    if (!isValidUrl(value)) return "Введи коректне посилання, наприклад: https://example.com";
+    const { url } = formData;
+
+    const basicError = this.require(formData, 'url', "Введи посилання.");
+    if (basicError) return basicError;
 
     try {
-      const parsed = new URL(value);
+      const parsed = new URL(url);
       if (!ALLOWED_PROTOCOLS.includes(parsed.protocol)) {
         return `Протокол «${parsed.protocol}» не підтримується. Використовуй http:// або https://.`;
       }

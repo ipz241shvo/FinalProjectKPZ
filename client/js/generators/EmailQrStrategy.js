@@ -22,20 +22,13 @@ export class EmailQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const email = formData.email;
-    const cc = formData.emailCc;
-    const subject = formData.emailSubject;
-    const body = formData.emailBody;
+    const { email, cc, subject, body } = formData;
 
-    if (!email) return "Введи email адресу.";
-    if (!isValidEmail(email)) return "Введи коректний email, наприклад: user@example.com";
-    if (cc && !isValidEmail(cc)) return "Введи коректний email для копії (CC).";
-    if (subject && subject.length > MAX_SUBJECT_LENGTH) {
-      return `Тема листа не може перевищувати ${MAX_SUBJECT_LENGTH} символів.`;
-    }
-    if (body && body.length > MAX_BODY_LENGTH) {
-      return `Текст листа не може перевищувати ${MAX_BODY_LENGTH} символів.`;
-    }
+    const emailError = this.validateRequired(formData, 'email', "Введи email адресу.");
+    if (emailError) return emailError;
+
+    if (subject && subject.length > 200) return "Тема занадто довга.";
+    if (body && body.length > 2000) return "Текст листа занадто довгий.";
 
     return null;
   }

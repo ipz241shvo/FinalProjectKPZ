@@ -26,14 +26,12 @@ export class VCardQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const firstName = formData.vcardFirstName;
-    const lastName = formData.vcardLastName;
-    const email = formData.vcardEmail;
-    const website = formData.vcardWebsite;
+    const { vcardFirstName, vcardLastName, vcardEmail, vcardWebsite } = formData;
 
-    if (!firstName && !lastName) return "Введіть хоча б ім'я або прізвище.";
-    if (email && !isValidEmail(email)) return "Введіть коректний email контакту.";
-    if (website && !isValidUrl(website)) return "Введіть коректне посилання на сайт контакту.";
+    if (!vcardFirstName && !vcardLastName) return "Введіть хоча б ім'я або прізвище.";
+    
+    if (vcardEmail && !isValidEmail(vcardEmail)) return "Введіть коректний email контакту.";
+    if (vcardWebsite && !isValidUrl(vcardWebsite)) return "Введіть коректне посилання на сайт контакту.";
 
     return null;
   }

@@ -16,22 +16,15 @@ export class WifiQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const ssid = formData.ssid;
-    const password = formData.password;
-    const security = formData.security;
+    const { ssid, password, security } = formData;
 
-    if (!ssid) return "Введи назву Wi-Fi мережі (SSID).";
-    if (ssid.length > MAX_SSID_LENGTH) {
-      return `Назва мережі не може перевищувати ${MAX_SSID_LENGTH} символів.`;
-    }
-    if (security !== "nopass" && !password) {
-      return "Для захищеної Wi-Fi мережі введи пароль.";
-    }
-    if (password && password.length > MAX_WIFI_PASSWORD_LENGTH) {
-      return `Пароль Wi-Fi не може перевищувати ${MAX_WIFI_PASSWORD_LENGTH} символів.`;
-    }
+    const ssidError = this.validateRequired(formData, 'ssid', "Введи назву Wi-Fi мережі (SSID).");
+    if (ssidError) return ssidError;
 
-    return null;
+    if (ssid.length > 32) return "Назва мережі занадто довга.";
+    if (security !== "nopass" && !password) return "Для захищеної мережі введи пароль.";
+
+    return this.validateMaxLength(password, 63, "Пароль Wi-Fi");
   }
 
   parsePayload(rawPayload) {

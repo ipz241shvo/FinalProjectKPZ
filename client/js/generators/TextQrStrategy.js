@@ -11,15 +11,8 @@ export class TextQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const text = formData.text;
-    if (!text) return "Введи текст.";
-    if (text.length > TEXT_ABSOLUTE_MAX_LENGTH) {
-      return `Текст перевищує максимальну ємність QR-коду (${TEXT_ABSOLUTE_MAX_LENGTH} символів).`;
-    }
-    if (text.length > TEXT_MAX_RECOMMENDED_LENGTH) {
-      return `Текст дуже довгий (${text.length} символів). Рекомендовано до ${TEXT_MAX_RECOMMENDED_LENGTH} для кращого сканування.`;
-    }
-    return null;
+    return this.require(formData, 'text', "Введи текст.") ||
+        this.limit(formData.text, 2953, "Текст");
   }
 
   sanitize(formData) {

@@ -48,15 +48,9 @@ export class SocialQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const username = formData.socialUsername;
-    if (!username) return "Введіть нікнейм або ім'я користувача.";
-    if (username.length > USERNAME_MAX_LENGTH) {
-      return `Нікнейм не може перевищувати ${USERNAME_MAX_LENGTH} символів.`;
-    }
-    if (USERNAME_INVALID_CHARS_REGEX.test(username)) {
-      return "Нікнейм не може містити пробіли або спеціальні символи.";
-    }
-    return null;
+    return this.require(formData, 'socialUsername', "Введіть нікнейм.") ||
+        this.limit(formData.socialUsername, 64, "Нікнейм") ||
+        this.matches(formData.socialUsername, /^[^\s<>"]+$/, "Нікнейм містить заборонені символи.");
   }
 
   sanitize(formData) {

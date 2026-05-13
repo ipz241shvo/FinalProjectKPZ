@@ -10,13 +10,11 @@ export class PhoneQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const phone = formData.phone;
-    if (!phone) return "Введи номер телефону.";
-    if (!PHONE_DIGITS_REGEX.test(phone)) return "Номер телефону має містити хоча б одну цифру.";
-    if (!PHONE_VALID_CHARS_REGEX.test(phone)) {
-      return "Номер телефону може містити лише цифри, +, пробіли, дефіси та дужки.";
-    }
-    return null;
+    const { phone } = formData;
+
+    return this.require(formData, 'phone', "Введи номер телефону.") ||
+        this.matches(phone, /\d/, "Номер телефону має містити хоча б одну цифру.") ||
+        this.matches(phone, /^[+\d\s\-().]+$/, "Номер телефону може містити лише цифри, +, пробіли, дефіси та дужки.");
   }
 
   sanitize(formData) {
