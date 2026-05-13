@@ -42,15 +42,15 @@ export class EventQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const name = formData.eventName;
-    const start = formData.eventStart;
-    const end = formData.eventEnd;
+    const { eventName, eventStart, eventEnd } = formData;
 
-    if (!name) return "Введіть назву події.";
-    if (name.length > 200) return "Назва події не може перевищувати 200 символів.";
-    if (start && end) {
-      const startDate = new Date(start);
-      const endDate = new Date(end);
+    const nameError = this.require(formData, 'eventName', "Введіть назву події.") ||
+        this.limit(eventName, 200, "Назва події");
+    if (nameError) return nameError;
+
+    if (eventStart && eventEnd) {
+      const startDate = new Date(eventStart);
+      const endDate = new Date(eventEnd);
       if (isNaN(startDate.getTime())) return "Дата початку невалідна.";
       if (isNaN(endDate.getTime())) return "Дата кінця невалідна.";
       if (startDate >= endDate) return "Дата початку має бути раніше дати кінця.";

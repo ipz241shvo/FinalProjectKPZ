@@ -12,16 +12,9 @@ export class SmsQrStrategy extends BaseQrStrategy {
   }
 
   validate(formData) {
-    const phone = formData.smsPhone;
-    const message = formData.smsMessage;
-
-    if (!phone) return "Введіть номер телефону для SMS.";
-    if (!PHONE_DIGITS_REGEX.test(phone)) return "Номер телефону має містити хоча б одну цифру.";
-    if (message && message.length > MAX_SMS_MESSAGE_LENGTH) {
-      return `Повідомлення SMS не може перевищувати ${MAX_SMS_MESSAGE_LENGTH} символів.`;
-    }
-
-    return null;
+    return this.require(formData, 'smsPhone', "Введіть номер телефону.") ||
+        this.matches(formData.smsPhone, PHONE_DIGITS_REGEX, "Номер має містити цифри.") ||
+        this.limit(formData.smsMessage, 160, "Повідомлення");
   }
 
   parsePayload(rawPayload) {
