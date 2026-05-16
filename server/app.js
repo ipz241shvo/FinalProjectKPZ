@@ -58,6 +58,7 @@ app.get("/api/me", (req, res) => {
 
 app.post("/api/logout", (req, res) => {
   req.session.destroy(() => {
+    res.clearCookie('connect.sid'); 
     res.json({ success: true });
   });
 });
@@ -65,6 +66,11 @@ app.post("/api/logout", (req, res) => {
 app.post("/api/qr", async (req, res) => {
   if (!req.session.user) {
     return res.status(401).json({ message: "Не авторизований" });
+  }
+
+  const { url, qrType } = req.body;
+  if (!url || !qrType) {
+    return res.status(400).json({ message: "Відсутні обов'язкові поля" });
   }
 
   try {

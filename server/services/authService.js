@@ -16,7 +16,10 @@ export const login = async (login, password) => {
     throw new Error("Invalid credentials");
   }
 
-  return user;
+  // Видаляємо пароль перед поверненням
+  const { password: _, ...userWithoutPassword } = user;
+  return userWithoutPassword;
+  
 };
 
 export const register = async (login, password) => {
