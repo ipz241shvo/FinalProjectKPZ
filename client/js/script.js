@@ -280,44 +280,26 @@ function clearQr() {
 }
 
 function clearTypeFields() {
-  qrInput.value = "";
+  const textInputs = [
+    qrInput, wifiSsidInput, wifiPasswordInput, emailAddressInput,
+    emailSubjectInput, emailBodyInput, emailCcInput, phoneNumberInput,
+    textContentInput, vcardFirstNameInput, vcardLastNameInput,
+    vcardPhoneInput, vcardEmailInput, vcardCompanyInput, vcardWebsiteInput,
+    vcardJobTitleInput, smsPhoneInput, smsMessageInput, geoLatInput,
+    geoLngInput, geoLabelInput, eventNameInput, eventLocationInput,
+    eventDescInput, eventStartInput, eventEndInput, socialUsernameInput
+  ];
 
-  wifiSsidInput.value = "";
-  wifiPasswordInput.value = "";
-  wifiSecurityInput.value = "WPA";
-  wifiHiddenInput.checked = false;
+  textInputs.forEach(input => {
+    if (input) {
+      input.value = "";
+    }
+  });
 
-  emailAddressInput.value = "";
-  emailSubjectInput.value = "";
-  emailBodyInput.value = "";
-  if (emailCcInput) emailCcInput.value = "";
-
-  phoneNumberInput.value = "";
-  textContentInput.value = "";
-
-  if (vcardFirstNameInput) vcardFirstNameInput.value = "";
-  if (vcardLastNameInput) vcardLastNameInput.value = "";
-  if (vcardPhoneInput) vcardPhoneInput.value = "";
-  if (vcardEmailInput) vcardEmailInput.value = "";
-  if (vcardCompanyInput) vcardCompanyInput.value = "";
-  if (vcardWebsiteInput) vcardWebsiteInput.value = "";
-  if (vcardJobTitleInput) vcardJobTitleInput.value = "";
-
-  if (smsPhoneInput) smsPhoneInput.value = "";
-  if (smsMessageInput) smsMessageInput.value = "";
-
-  if (geoLatInput) geoLatInput.value = "";
-  if (geoLngInput) geoLngInput.value = "";
-  if (geoLabelInput) geoLabelInput.value = "";
-
-  if (eventNameInput) eventNameInput.value = "";
-  if (eventLocationInput) eventLocationInput.value = "";
-  if (eventDescInput) eventDescInput.value = "";
-  if (eventStartInput) eventStartInput.value = "";
-  if (eventEndInput) eventEndInput.value = "";
-
-  if (socialUsernameInput) socialUsernameInput.value = "";
+  if (wifiSecurityInput) wifiSecurityInput.value = "WPA";
+  if (wifiHiddenInput) wifiHiddenInput.checked = false;
   if (socialNetworkSelect) socialNetworkSelect.value = "telegram";
+
   if (socialPreviewLink) {
     socialPreviewLink.textContent = "—";
     socialPreviewLink.href = "#";
