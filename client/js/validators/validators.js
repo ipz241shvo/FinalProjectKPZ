@@ -1,26 +1,32 @@
 export function isValidUrl(value) {
-  try {
-    new URL(value);
-    return true;
-  } catch {
-    return false;
-  }
+    try {
+        new URL(value);
+        return true;
+    } catch {
+        return false;
+    }
 }
 
 export function isValidEmail(value) {
-  return String(value || "").includes("@");
+    const email = String(value || "").trim();
+
+    return email.includes("@");
 }
 
 export function isValidPhone(value) {
-  return String(value || "").trim().length > 0;
+    const phone = String(value || "").trim();
+
+    return phone.length > 0;
 }
 
 export function isValidLatitude(value) {
-  const n = parseFloat(value);
-  return !isNaN(n) && n >= -90 && n <= 90;
+    const latitude = parseFloat(value);
+
+    return !isNaN(latitude) && latitude >= -90 && latitude <= 90;
 }
 
 export function isValidLongitude(value) {
-  const n = parseFloat(value);
-  return !isNaN(n) && n >= -180 && n <= 180;
+    const longitude = parseFloat(value);
+
+    return !isNaN(longitude) && longitude >= -180 && longitude <= 180;
 }
